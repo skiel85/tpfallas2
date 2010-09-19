@@ -1,0 +1,10 @@
+Esta es mas o menos la consigna:
+
+   1. Es una pruena concepto de lo que vamos a laburar despues o algo asi (es decir, no tiene q ser hiper volado)
+   2. Llevarlo andando para el lunes que viene
+   3. Hay que implementar un motor de inferencia hacia adelante
+   4. Loggear la working memory, datos, etcs en un archivo de texto
+   5. Lenguajes permitidos: Python, Jython, Groovy, F#, erland
+   6. Cargar las reglas desde un archivo de texto 
+
+Saludos.-
