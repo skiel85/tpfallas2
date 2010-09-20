@@ -1,0 +1,9 @@
+Las Reglas tienen la forma:
+"premisa conector premisa conector premisa conector [...]"
+
+* Las premisas son las variables a,b,c,d y e y pueden tomar los valores 0 ó 1 ingresados por el usuario.
+* Los conectores pueden tomar los valores AND ó OR
+Proximamente...
+	* El modificador "-" indicará que la premisa está negada (Ej: -a equivale a "no a")
+
+Nota: Las reglas evalúan las condiciones de izquierda a derecha.

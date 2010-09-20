@@ -1,0 +1,3 @@
+a AND c OR b => c
+b AND c => d
+a AND b => c
