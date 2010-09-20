@@ -2,7 +2,7 @@ import java.util.Iterator;
 
 
 class MotorInferencia {
-
+	
 	static InputStreamReader isr = new InputStreamReader(System.in)
 	static BufferedReader br = new BufferedReader(isr)
 	
@@ -20,43 +20,44 @@ class MotorInferencia {
 			}
 			if(closure!=null)conds.add(closure);
 		}
-
+		
 		regla.conditions = conds;
-		regla.evaluate  = {wm -> def result 
-								def j = 0
-								println(regla.name);
-								for(i in 0..(regla.conditions.size()-1)){
-									if(result==null){
-										if(regla.conditions[i](wm.getProperty(premisas[j]), wm.getProperty(premisas[j+1]))){
-											result = 1;
-										}else{
-											result = 0;
-										}
-										j++;
-									}else{
-										if(regla.conditions[i](result, wm.getProperty(premisas[j+1]))){
-											result = 1;
-										}else {
-											result = 0;
-										}
-										j++;
-									}
-								}
-								println(regla.name+" dio "+result);
-								return result;
-						 };		
+		regla.evaluate  = {wm ->
+			def result 
+			def j = 0
+			println(regla.name);
+			for(i in 0..(regla.conditions.size()-1)){
+				if(result==null){
+					if(regla.conditions[i](wm.getProperty(premisas[j]), wm.getProperty(premisas[j+1]))){
+						result = 1;
+					}else{
+						result = 0;
+					}
+					j++;
+				}else{
+					if(regla.conditions[i](result, wm.getProperty(premisas[j+1]))){
+						result = 1;
+					}else {
+						result = 0;
+					}
+					j++;
+				}
+			}
+			println(regla.name+" dio "+result);
+			return result;
+		};		
 		regla.action = {wm -> wm.setProperty(premisas[premisas.size()-1], 1); println("Se ejecutó " + regla.name + " y el resultado es " + premisas[premisas.size()-1] + "=1") }
-		regla.result = {wm -> if(wm.getProperty(premisas[premisas.size()-1])){
-								return true;
-							  }else{
-							  	return false;
-							  }
-						}
+		regla.result = {wm ->
+			if(wm.getProperty(premisas[premisas.size()-1])){
+				return true;
+			}else{
+				return false;
+			}
+		}
 		return regla
 	}
 	
-	static def IngresarDato(nombreVariable)
-	{
+	static def IngresarDato(nombreVariable) {
 		println "Ingrese dato " + (nombreVariable) + " : "
 		return br.readLine().toInteger()
 	}
@@ -67,7 +68,7 @@ class MotorInferencia {
 	{
 		def archivo = new File("./src/reglas.txt");
 		def numeroRegla = 1;
-				
+		
 		archivo.eachLine{ line ->
 			def premisas = [];
 			def conectores = [];
@@ -81,12 +82,12 @@ class MotorInferencia {
 				if(i%2==0){
 					premisas[indexPremisas] = lineArray[i];
 					print(premisas[indexPremisas]+" ")
-//					println("premisa "+indexPremisas+" es "+premisas[indexPremisas]);
+					//					println("premisa "+indexPremisas+" es "+premisas[indexPremisas]);
 					indexPremisas++;
 				}else{
 					conectores[indexConectores] = lineArray[i];
 					print(conectores[indexConectores]+" ");
-//					println("conector "+indexConectores+" es "+conectores[indexConectores]);
+					//					println("conector "+indexConectores+" es "+conectores[indexConectores]);
 					indexConectores++;
 				}
 			}
@@ -96,7 +97,6 @@ class MotorInferencia {
 			conjunto.addRule(rule);
 			numeroRegla++;1
 		}
-		
 	}
 	
 	static void main(def args) {
@@ -104,9 +104,9 @@ class MotorInferencia {
 		WorkingMemory wm = new WorkingMemory()
 		
 		LeerReglas(conjunto);
-
+		
 		wm.a = IngresarDato("a")
-			
+		
 		//EjecutarReglasHaciaAdelante(wm, conjunto)
 		
 		wm.b = IngresarDato("b");
@@ -119,22 +119,20 @@ class MotorInferencia {
 		
 		wm.d = IngresarDato("d");
 		EjecutarReglasHaciaAtras(wm, conjunto);
-									
+		
 		println wm.dump()
 	}
 	
-	static def EjecutarReglasHaciaAdelante(WorkingMemory wm, RuleSet conjunto)
-	{
+	static def EjecutarReglasHaciaAdelante(WorkingMemory wm, RuleSet conjunto) {
 		RuleSet reglasQueCumplen = new RuleSet()
-
+		
 		conjunto.rules.each {			
 			if(it.evaluate(wm)) {				
-				reglasQueCumplen.rules<<it 
+				reglasQueCumplen.rules<<it
 			}
 		}
 		
-		if(reglasQueCumplen.rules.size() > 0)
-		{
+		if(reglasQueCumplen.rules.size() > 0) {
 			Rule reglaAEjecutar = ResolverConflictos(reglasQueCumplen);
 			reglaAEjecutar.action(wm)
 			reglaAEjecutar.executed = true;
@@ -144,29 +142,25 @@ class MotorInferencia {
 		}
 	}
 	
-	static def EjecutarReglasHaciaAtras(WorkingMemory wm, RuleSet conjunto)
-	{
+	static def EjecutarReglasHaciaAtras(WorkingMemory wm, RuleSet conjunto) {
 		RuleSet reglasQueCumplen = new RuleSet()
-
+		
 		conjunto.rules.each {
 			if((it.result(wm))&&(it.evaluate(wm))) {
 				reglasQueCumplen.rules<<it
 			}
 		}
 		
-		if(reglasQueCumplen.rules.size() > 0)
-		{
+		if(reglasQueCumplen.rules.size() > 0) {
 			reglasQueCumplen.rules.each{
 				println("Se cumple la regla "+ it.getName());
-			}	
+			}
 		}
 		else{
 			println("No cumple ninguna regla");
 		}
 	}
-	static def ResolverConflictos(RuleSet reglasQueCumplen)
-	{
+	static def ResolverConflictos(RuleSet reglasQueCumplen) {
 		reglasQueCumplen.rules.getAt(0)
 	}
-	
 }
